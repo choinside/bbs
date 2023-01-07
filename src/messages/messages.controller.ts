@@ -6,9 +6,9 @@ import {
   Param,
   Post,
   ParseIntPipe,
+  Put,
 } from '@nestjs/common';
 import { CreateMessageDto } from './dto/create-message.dto';
-import { MessageCommentsDto } from './dto/message-comments.dto';
 import { Message } from './message.entity';
 import { MessagesService } from './messages.service';
 
@@ -21,9 +21,10 @@ export class MessagesController {
     return this.messagesService.create(createMessageDto);
   }
 
-  @Post(':id')
-  update(@Param('id') id: string, @Body() createMessageDto: CreateMessageDto): Promise<void> {
-    return this.messagesService.update(id, createMessageDto);
+  @Put(':id')
+  //@Post(':id') // for HTTP PUT test
+  update(@Param('id') id: number, @Body() updateMessageDto: CreateMessageDto): Promise<void> {
+    return this.messagesService.update(id, updateMessageDto);
   }
 
   @Get()
@@ -32,21 +33,17 @@ export class MessagesController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number): Promise<MessageCommentsDto> {
+  findOne(@Param('id', ParseIntPipe) id: number): Promise<Message> {
     console.log('KENNY findOne()', id);
-    const msgcmts = this.messagesService.findOne(id);
-    console.log('KENNY', msgcmts);
+    const msg = this.messagesService.findOne(id);
+    console.log('KENNY', msg);
     
-    return msgcmts;
+    return msg;
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string): Promise<void> {
+  //@Delete(':id')
+  @Post(':id') // for HTTP DELETE test
+  remove(@Param('id') id: number): Promise<void> {
     return this.messagesService.remove(id);
   }
-
-  //@Post(':id')
-  //remove2(@Param('id') id: string): Promise<void> {
-  //  return this.messagesService.remove(id);
-  //}
 }

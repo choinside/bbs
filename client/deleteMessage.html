@@ -1,9 +1,12 @@
 <html>
-    <title>Hey</title>
+    <title>deleteMesage</title>
     <body>
-        <form action="messages/1" method="post">
-            Message ID: <input type="text" name="id">
-            <input type="submit" >
+        <center>
+        <form action="messages/" method="post">
+            Message ID: <input type="text" name="msg_id">
+            <br><br>
+            <input type="submit" onclick="form.action += form.msg_id.value">
         </form>     
+        </center>
     </body>
 </html>

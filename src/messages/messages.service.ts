@@ -2,10 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateMessageDto } from './dto/create-message.dto';
-import { UpdateMessageDto } from './dto/update-message.dto';
 import { Message } from './message.entity';
 import { Comment } from '../comments/comment.entity';
-import { MessageCommentsDto } from './dto/message-comments.dto';
+import { User } from 'src/users/user.entity';
 
 @Injectable()
 export class MessagesService {
@@ -17,49 +16,55 @@ export class MessagesService {
   ) {}
 
   create(createMessageDto: CreateMessageDto): Promise<Message> {
+    const usr = new User();
+    usr.id = 1; // Fixed user id
+
     const msg = new Message();
     msg.title = createMessageDto.title;
     msg.description = createMessageDto.description;
-    msg.usr_id = 1;
+    msg.user = usr;
 
     return this.messagesRepository.save(msg);
   }
 
-  async update(id: string, updateMessageDto: UpdateMessageDto): Promise<void> {
-    const result = await this.messagesRepository
-      .createQueryBuilder()
-      .select()
-      .update('message', { ...updateMessageDto })
-      .where('msg_id = :id', { id })
-      .execute();
-    if (result.affected !== 0) {
-      //return new BasicMessageDto('Updated Successfully.');
-    } //else throw new NotFoundException();
+  async update(id: number, updateMessageDto: CreateMessageDto): Promise<void> {
+    console.log('update()', id, updateMessageDto);
+    const msg = await this.messagesRepository.findOneBy({ id: id })
+    
+    msg.title = updateMessageDto.title;
+    msg.description = updateMessageDto.description;
+    console.log(updateMessageDto.title, updateMessageDto.description);
+    
+    await this.messagesRepository.save(msg)
   }
 
   async findAll(): Promise<Message[]> {
     return this.messagesRepository.find();
   }
 
-  async findOne(msg_id: number): Promise<MessageCommentsDto> {
-    const msg = await this.messagesRepository.findOneBy({ msg_id: msg_id });
-    const cmts = await this.commentsRepository.find({ where: { msg_id: msg_id } });
-    const msgcmts = new MessageCommentsDto(msg, cmts);
-    console.log('KENNY3', msgcmts);
-
-    return msgcmts;
-  }
-  /*async getByBoardId(boardId: number): Promise<BoardInfoResponseDto> {
-    const board = await this.boardRepository.findOne(boardId, {
-      relations: ['user'],
+  async findOne(msg_id: number): Promise<Message> {
+    const msg = await this.messagesRepository.findOne({
+      where: {
+        id: msg_id,
+      },
+      relations: {
+        comments: true,
+      },
     });
-    if (!!board) {
-      const writer = board.user;
-      return new BoardInfoResponseDto(writer, board);
-    } else throw new NotFoundException('boardId is invalid.');
-  }*/
+    console.log('KENNY', 'findOne()', msg);
 
-  async remove(id: string): Promise<void> {
-    await this.messagesRepository.delete(id);
+    return msg;
+  }
+
+  async remove(id: number): Promise<void> {
+    console.log('remove()', id);
+    //await this.commentsRepository.delete({ {where: {msgId: id}}, });
+    //await this.messagesRepository.delete(id);
+
+    const msg = await this.messagesRepository.findOneBy({
+      id: id,
+    });
+    console.log(msg);
+    this.messagesRepository.remove(msg);
   }
 }

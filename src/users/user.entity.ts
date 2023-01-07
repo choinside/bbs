@@ -5,14 +5,14 @@ import { Comment } from '../comments/comment.entity';
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
-  usr_id: number;
+  id: number;
 
   @Column()
   name: string;
 
-  @OneToMany(() => Message, (message) => message.usr_id)
+  @OneToMany(() => Message, (message) => message.user)
   messages: Message[];
 
-  @OneToMany(() => Comment, (comment) => comment.usr_id)
+  @OneToMany(() => Comment, (comment) => comment.user)
   comments: Comment[];
 }

@@ -5,7 +5,7 @@ import { Comment } from '../comments/comment.entity';
 @Entity()
 export class Message {
   @PrimaryGeneratedColumn()
-  msg_id: number;
+  id: number;
 
   @Column()
   title: string;
@@ -13,13 +13,10 @@ export class Message {
   @Column()
   description: string;
 
-  @Column()
-  usr_id: number;
-
-  @OneToMany(() => Comment, (comment) => comment.msg_id)
+  @OneToMany(() => Comment, (comment) => comment.message)
   comments: Comment[];
 
   @ManyToOne(() => User, (user) => user.messages)
-  @JoinColumn({ name: 'usr_id' })
+  //@JoinColumn()
   user: User;
 }

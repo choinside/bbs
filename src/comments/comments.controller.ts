@@ -26,7 +26,8 @@ export class CommentsController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number): Promise<Comment> {
+  //findOne(@Param('id', ParseIntPipe) id: number): Promise<Comment> {
+  findOne(@Param('id', ParseIntPipe) id: number): Promise<void> {
     return this.commentsService.findOne(id);
   }
 
