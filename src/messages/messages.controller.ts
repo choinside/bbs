@@ -30,15 +30,12 @@ export class MessagesController {
   @Get()
   findAll(): Promise<Message[]> {
     return this.messagesService.findAll();
+
   }
 
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number): Promise<Message> {
-    console.log('KENNY findOne()', id);
-    const msg = this.messagesService.findOne(id);
-    console.log('KENNY', msg);
-    
-    return msg;
+    return this.messagesService.findOne(id);
   }
 
   //@Delete(':id')

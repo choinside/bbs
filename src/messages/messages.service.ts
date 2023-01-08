@@ -1,18 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { Message } from './message.entity';
 import { Comment } from '../comments/comment.entity';
-import { User } from 'src/users/user.entity';
+import { User } from '../users/user.entity';
 
 @Injectable()
 export class MessagesService {
   constructor(
     @InjectRepository(Message)
     private readonly messagesRepository: Repository<Message>,
-    @InjectRepository(Comment)
-    private readonly commentsRepository: Repository<Comment>,
   ) {}
 
   create(createMessageDto: CreateMessageDto): Promise<Message> {
@@ -28,12 +26,13 @@ export class MessagesService {
   }
 
   async update(id: number, updateMessageDto: CreateMessageDto): Promise<void> {
-    console.log('update()', id, updateMessageDto);
     const msg = await this.messagesRepository.findOneBy({ id: id })
+    if (msg == null) {
+      throw new InternalServerErrorException('Message not found');
+    }
     
     msg.title = updateMessageDto.title;
     msg.description = updateMessageDto.description;
-    console.log(updateMessageDto.title, updateMessageDto.description);
     
     await this.messagesRepository.save(msg)
   }
@@ -51,20 +50,18 @@ export class MessagesService {
         comments: true,
       },
     });
-    console.log('KENNY', 'findOne()', msg);
 
     return msg;
   }
 
   async remove(id: number): Promise<void> {
-    console.log('remove()', id);
-    //await this.commentsRepository.delete({ {where: {msgId: id}}, });
-    //await this.messagesRepository.delete(id);
-
     const msg = await this.messagesRepository.findOneBy({
       id: id,
     });
-    console.log(msg);
+    if (msg == null) {
+      throw new InternalServerErrorException('Message not found');
+    }
+
     this.messagesRepository.remove(msg);
   }
 }

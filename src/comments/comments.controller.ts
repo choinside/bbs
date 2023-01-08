@@ -20,18 +20,8 @@ export class CommentsController {
     return this.commentsService.create(createCommentDto);
   }
 
-  @Get()
-  findAll(): Promise<Comment[]> {
-    return this.commentsService.findAll();
-  }
-
-  @Get(':id')
-  //findOne(@Param('id', ParseIntPipe) id: number): Promise<Comment> {
-  findOne(@Param('id', ParseIntPipe) id: number): Promise<void> {
-    return this.commentsService.findOne(id);
-  }
-
-  @Delete(':id')
+  //@Delete(':id')
+  @Post(':id') // for HTTP DELETE test
   remove(@Param('id') id: string): Promise<void> {
     return this.commentsService.remove(id);
   }

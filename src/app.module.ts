@@ -8,6 +8,8 @@ import { MessagesModule } from './messages/messages.module';
 import { CommentsModule } from './comments/comments.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { Comment } from './comments/comment.entity';
+import { Message } from './messages/message.entity';
 
 @Module({
   imports: [
@@ -21,6 +23,7 @@ import { join } from 'path';
       autoLoadEntities: true,
       synchronize: true,
     }),
+    TypeOrmModule.forFeature([Message, Comment]),
     UsersModule,
     MessagesModule,
     CommentsModule,

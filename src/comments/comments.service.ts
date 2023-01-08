@@ -3,8 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { Comment } from './comment.entity';
-import { Message } from 'src/messages/message.entity';
-import { User } from 'src/users/user.entity';
+import { Message } from '../messages/message.entity';
+import { User } from '../users/user.entity';
 
 @Injectable()
 export class CommentsService {
@@ -26,15 +26,6 @@ export class CommentsService {
     cmt.message = msg;
 
     return this.commentsRepository.save(cmt);
-  }
-
-  async findAll(): Promise<Comment[]> {
-    return this.commentsRepository.find();
-  }
-
-  //findOne(msg_id: number): Promise<Comment> {
-  async findOne(msg_id: number): Promise<void> {
-    //return this.commentsRepository.findOneBy({ msg_id: msg_id });
   }
 
   async remove(id: string): Promise<void> {
