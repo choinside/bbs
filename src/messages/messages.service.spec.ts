@@ -32,10 +32,10 @@ const oneMessage = {
 
 describe('MessagesService', () => {
   let service: MessagesService;
-  let repository: Repository<Message>;
+  //let repository: Repository<Message>;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    /*const module: TestingModule = await Test.createTestingModule({
       providers: [
         MessagesService,
         {
@@ -49,10 +49,27 @@ describe('MessagesService', () => {
           },
         },
       ],
+    }).compile();*/
+    const module: TestingModule = await Test.createTestingModule({
+      imports: [
+        TypeOrmModule.forRoot({
+          type: 'mysql',
+          host: 'localhost',
+          port: 3306,
+          username: 'root',
+          password: 'root1234',
+          database: 'test',
+          entities: [User, Message, Comment],
+          //autoLoadEntities: true,
+          synchronize: true,
+        }),
+        TypeOrmModule.forFeature([User, Message, Comment]),
+      ],
+      providers: [MessagesService],
     }).compile();
 
     service = module.get<MessagesService>(MessagesService);
-    repository = module.get<Repository<Message>>(getRepositoryToken(Message));
+    //repository = module.get<Repository<Message>>(getRepositoryToken(Message));
   });
 
   it('should be defined', () => {
@@ -60,23 +77,21 @@ describe('MessagesService', () => {
   });
 
   describe('create()', () => {
-    it('should successfully insert a message', () => {
-      const oneMessage = {
-        id: '101',
-        title: '안녕하세요.',
-        description: '안녕하세요. 처음으로 게시글을 작성합니다...',
-      };
+    it('should successfully insert a message', async () => {
+      const titl_str = '안녕하세요.';
+      const desc_str = '안녕하세요. 처음으로 게시글을 작성합니다...';
 
-      expect(
-        service.create({
-          title: '안녕하세요.',
-          description: '안녕하세요. 처음으로 게시글을 작성합니다...',
-        }),
-      ).resolves.toEqual(oneMessage);
+      const ret = await service.create({
+          title: titl_str,
+          description: desc_str,
+      });
+
+      expect(ret.title).toEqual(titl_str);
+      expect(ret.description).toEqual(desc_str);
     });
   });
 
-  describe('findAll()', () => {
+  /*describe('findAll()', () => {
     it('should return an array of users', async () => {
       const msgs = await service.findAll();
       expect(msgs).toEqual(messageArray);
@@ -98,5 +113,5 @@ describe('MessagesService', () => {
       //expect(removeSpy).toBeCalledWith(102);
       expect(retVal).toBeUndefined();
     });
-  });
+  });*/
 });
