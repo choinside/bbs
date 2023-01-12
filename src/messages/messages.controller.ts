@@ -7,40 +7,44 @@ import {
   Post,
   ParseIntPipe,
   Put,
+  UseFilters,
 } from '@nestjs/common';
 import { CreateMessageDto } from './dto/create-message.dto';
+import { ResponseMessageDto } from './dto/response-message.dto';
 import { Message } from './message.entity';
 import { MessagesService } from './messages.service';
+import { HttpExceptionFilter } from 'src/common/filters/http-exception.filter';
 
 @Controller('messages')
 export class MessagesController {
   constructor(private readonly messagesService: MessagesService) {}
 
   @Post()
-  create(@Body() createMessageDto: CreateMessageDto): Promise<Message> {
+  create(@Body() createMessageDto: CreateMessageDto): ResponseMessageDto {
     return this.messagesService.create(createMessageDto);
   }
 
   @Put(':id')
   //@Post(':id') // for HTTP PUT test
-  update(@Param('id') id: number, @Body() updateMessageDto: CreateMessageDto): Promise<void> {
+  update(@Param('id') id: number, @Body() updateMessageDto: CreateMessageDto): Promise<ResponseMessageDto> {
     return this.messagesService.update(id, updateMessageDto);
   }
 
   @Get()
-  findAll(): Promise<Message[]> {
+  findAll(): Promise<ResponseMessageDto> {
     return this.messagesService.findAll();
 
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number): Promise<Message> {
+  findOne(@Param('id', ParseIntPipe) id: number): Promise<ResponseMessageDto> {
     return this.messagesService.findOne(id);
   }
 
   //@Delete(':id')
   @Post(':id') // for HTTP DELETE test
-  remove(@Param('id') id: number): Promise<void> {
+  @UseFilters(HttpExceptionFilter)
+  remove(@Param('id') id: number): Promise<ResponseMessageDto> {
     return this.messagesService.remove(id);
   }
 }

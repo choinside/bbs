@@ -17,4 +17,16 @@ export class Comment {
   @ManyToOne(() => User, (user) => user.comments)
   //@JoinColumn()
   user: User;
+
+  static from(
+    cmt_str: string,
+    usr_id: number,
+    msg_id: number,
+  ) {
+    const cmt = new Comment();
+    cmt.comment = cmt_str;
+    cmt.user = User.from(usr_id);
+    cmt.message = Message.fromId(msg_id);
+    return cmt;
+  }
 }

@@ -19,4 +19,24 @@ export class Message {
   @ManyToOne(() => User, (user) => user.messages)
   //@JoinColumn()
   user: User;
+
+  static from(
+    title: string,
+    description: string,
+    usr_id: number,
+  ) {
+    const msg = new Message();
+    msg.title = title;
+    msg.description = description;
+    msg.user = User.from(usr_id);
+    return msg;
+  }
+
+  static fromId(
+    id: number,
+  ) {
+    const msg = new Message();
+    msg.id = id;
+    return msg;
+  }
 }

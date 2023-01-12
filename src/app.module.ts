@@ -10,6 +10,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { Comment } from './comments/comment.entity';
 import { Message } from './messages/message.entity';
+import { CoreModule } from './core/core.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { Message } from './messages/message.entity';
       synchronize: true,
     }),
     TypeOrmModule.forFeature([Message, Comment]),
+    //CoreModule,
     UsersModule,
     MessagesModule,
     CommentsModule,

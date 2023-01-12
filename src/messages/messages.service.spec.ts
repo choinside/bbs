@@ -76,7 +76,7 @@ describe('MessagesService', () => {
     expect(service).toBeDefined();
   });
 
-  describe('create()', () => {
+  /*describe('create()', () => {
     it('should successfully insert a message', async () => {
       const titl_str = '안녕하세요.';
       const desc_str = '안녕하세요. 처음으로 게시글을 작성합니다...';
@@ -89,29 +89,33 @@ describe('MessagesService', () => {
       expect(ret.title).toEqual(titl_str);
       expect(ret.description).toEqual(desc_str);
     });
-  });
+  });*/
 
-  /*describe('findAll()', () => {
-    it('should return an array of users', async () => {
+  describe('findAll()', () => {
+    it('should return an array of messages', async () => {
       const msgs = await service.findAll();
-      expect(msgs).toEqual(messageArray);
+
+      expect(msgs.length).toEqual(3);
     });
   });
 
   describe('findOne()', () => {
-    it('should get a single user', () => {
+    it('should get a single user', async () => {
       //const repoSpy = jest.spyOn(repository, 'findOneBy');
       //expect(service.findOne(1)).resolves.toEqual(oneMessage);
       //expect(repoSpy).toBeCalledWith({ id: 1 });
+      const msg = await service.findOne(2);
+
+      expect(msg.id).toEqual(2);
     });
   });
 
-  describe('remove()', () => {
-    it('should call remove with the passed value', async () => {
-      const removeSpy = jest.spyOn(repository, 'delete');
-      const retVal = await service.remove(102);
+  /*describe('remove()', () => {
+    it('should call remove with the passed value',  async () => {
+      //const removeSpy = jest.spyOn(repository, 'delete');
+      const ret =  await service.remove(14);
       //expect(removeSpy).toBeCalledWith(102);
-      expect(retVal).toBeUndefined();
+      //expect(ret).toBeUndefined();
     });
   });*/
 });

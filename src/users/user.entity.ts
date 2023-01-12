@@ -15,4 +15,12 @@ export class User {
 
   @OneToMany(() => Comment, (comment) => comment.user)
   comments: Comment[];
+
+  static from(
+    id: number,
+  ) {
+    const usr = new User();
+    usr.id = id;
+    return usr;
+  }
 }
